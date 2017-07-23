@@ -1,0 +1,9 @@
+.body {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding-top: 30px;
+  /*width: 100%;*/
+  min-height: 500px;
+  background-color: green;
+}
