@@ -22,8 +22,8 @@ module.exports = {
         },
       },
       {
-        test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('css!sass'),
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('css-loader'),
       },
     ],
   },
