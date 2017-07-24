@@ -7,25 +7,19 @@ import '../css/header.css'
 // }
 class Header extends React.Component {
 
-	// --- method ---
-	buttonClick = (num) => () => {
-		console.log(`Clicked ${num}`);
-	}
-
-
 	render() {
 		return (
 			<div>
 				<div className="header"> ==== HEADER ==== </div>
 				{
-					Array(3).fill().map((_, i) => i)
-					.map(num =>
-						<button
-							key={num}
-							onClick={this.buttonClick(num)}>
-							{num}
-						</button>
-					)
+					// Array(3).fill().map((_, i) => i)
+					// .map(num =>
+					// 	<button
+					// 		key={num}
+					// 		onClick={this.buttonClick(num)}>
+					// 		{num}
+					// 	</button>
+					// )
 				}
 				{/* <button onClick={this.buttonClick}>{this.props.num}</button> */}
 			</div>

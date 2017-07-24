@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 
 import Header from './components/header'
 import Body from './components/body'
+import Calc from './components/calculator/calculator'
 import Footer from './components/footer'
 
 class Index extends React.Component {
@@ -10,7 +11,8 @@ class Index extends React.Component {
 		return (
 			<div>
 				<Header />
-				<Body />
+				{/* <Body /> */}
+				<Calc />
 				<Footer />
 			</div>
 		)
