@@ -2,17 +2,32 @@ import React from 'react'
 
 import '../css/header.css'
 
+// props: {
+// 	num
+// }
 class Header extends React.Component {
 
-	// buttonClick() {
-	// 	console.log("Clicked");
-	// }
+	// --- method ---
+	buttonClick = (num) => () => {
+		console.log(`Clicked ${num}`);
+	}
+
 
 	render() {
 		return (
 			<div>
 				<div className="header"> ==== HEADER ==== </div>
-				{/* <button onClick={this.buttonClick}>YO</button> */}
+				{
+					Array(3).fill().map((_, i) => i)
+					.map(num =>
+						<button
+							key={num}
+							onClick={this.buttonClick(num)}>
+							{num}
+						</button>
+					)
+				}
+				{/* <button onClick={this.buttonClick}>{this.props.num}</button> */}
 			</div>
 		)
 	}
