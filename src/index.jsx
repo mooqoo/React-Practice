@@ -2,20 +2,47 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import Header from './components/header'
-import Body from './components/body'
-import Calc from './components/calculator/calculator'
 import Footer from './components/footer'
 
+import Body from './components/body'
+import Calc from './components/calculator/calculator'
+import TicTacToe from './components/tic-tac-toe/index'
+
+const Page = {
+	CALC: 'calculator',
+	TIC: 'tic-tac-toe',
+}
+
 class Index extends React.Component {
+	constructor(props) {
+    super(props)
+    this.state = {
+      page: Page.CALC
+    }
+  }
+
 	render() {
 		return (
 			<div>
-				<Header />
+				<Header
+					clickCalc={this.changePage(Page.CALC)}
+					clickTicTac={this.changePage(Page.TIC)} />
+
+				{this.state.page === Page.CALC && <Calc />}
+				{this.state.page === Page.TIC && <TicTacToe />}
+
 				{/* <Body /> */}
-				<Calc />
+				{/* <Calc /> */}
+				{/* <TicTacToe /> */}
+
 				<Footer />
 			</div>
 		)
+	}
+
+	changePage = (page) => () => {
+		this.setState({page})
+		console.log('change place is called...', page)
 	}
 }
 

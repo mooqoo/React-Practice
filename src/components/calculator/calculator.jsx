@@ -1,8 +1,6 @@
 import React from 'react'
 
-// import '../css/footer.css'
 import NumBtn from './numBtn'
-// import OpBtn from './opBtn'
 
 // TODO extract to util
 const nthArray = (nth) => Array(10).fill().map((_, i) => i)

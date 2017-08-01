@@ -2,26 +2,28 @@ import React from 'react'
 
 import '../css/header.css'
 
-// props: {
-// 	num
-// }
 class Header extends React.Component {
 
 	render() {
 		return (
 			<div>
 				<div className="header"> ==== HEADER ==== </div>
-				{
-					// Array(3).fill().map((_, i) => i)
-					// .map(num =>
-					// 	<button
-					// 		key={num}
-					// 		onClick={this.buttonClick(num)}>
-					// 		{num}
-					// 	</button>
-					// )
-				}
-				{/* <button onClick={this.buttonClick}>{this.props.num}</button> */}
+
+
+				<div className="btn_container">
+					<button
+						className="headerBtn"
+						onClick={this.props.clickCalc}>
+						calculator
+					</button>
+
+					<button
+						className="headerBtn"
+						onClick={this.props.clickTicTac}>
+						tic tac toe
+					</button>
+				</div>
+
 			</div>
 		)
 	}
