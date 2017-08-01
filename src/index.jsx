@@ -17,7 +17,7 @@ class Index extends React.Component {
 	constructor(props) {
     super(props)
     this.state = {
-      page: Page.CALC
+      page: Page.TIC
     }
   }
 

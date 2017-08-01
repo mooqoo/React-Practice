@@ -1,10 +1,7 @@
 import React from 'react'
 
 import NumBtn from './numBtn'
-
-// TODO extract to util
-const nthArray = (nth) => Array(10).fill().map((_, i) => i)
-const range = (start, end) => Array(end-start+1).fill().map((_, i) => i + start)
+import {nthArray, range} from '../../utils/utils'
 
 const styleSheet = {
   rootWrapper: {
