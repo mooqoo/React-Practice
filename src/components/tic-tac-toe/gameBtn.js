@@ -1,5 +1,5 @@
 import React from 'react'
-
+import {Player} from './index'
 
 const styleSheet = {
   container: {
@@ -31,25 +31,26 @@ class Btn extends React.Component {
     }
   }
 
-  setButton = () => {
-      const ownerId = this.state.ownerId
-      // console.log('click: status', status)
-      if (ownerId !== IdEmpty) return
+  // setButton = () => {
+  //     const ownerId = this.state.ownerId
+  //     // console.log('click: status', status)
+  //     if (ownerId !== IdEmpty) return
+  //
+  //     this.props.clickBtn()
+  //     const player = this.props.playerClicked
+  //     const newOwnerId = player ? player.id : IdEmpty
+  //     this.setState({ownerId: newOwnerId})
+  // }
 
-      this.props.clickBtn()
-      const player = this.props.playerClicked
-      const newOwnerId = player ? player.id : IdEmpty
-      this.setState({ownerId: newOwnerId})
-  }
-
+  // player: 'O', 'X', 'Empty', 'Disabled'
 	render = () => {
     // console.log('render... this.state.status=', this.state.status)
-		const player = this.props.playerClicked // || {id: ''}
-    const color = player.id === 'O' ? styleSheet.playerO : styleSheet.playerX
+		const playerId = this.props.playerClicked && this.props.playerClicked.id
+    const color = playerId === 'O' ? styleSheet.playerO : styleSheet.playerX
 
 		return (
-			<button style={{...styleSheet.container, ...color}} onClick={this.setButton}>
-        {this.state.ownerId}
+			<button style={{...styleSheet.container, ...color}} onClick={this.props.clickBtn}>
+        {playerId}
       </button>
 		)
 	}

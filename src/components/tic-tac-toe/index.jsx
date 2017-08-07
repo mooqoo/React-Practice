@@ -1,4 +1,5 @@
 import React from 'react'
+import {lensPath, set} from 'ramda'
 
 import {nthArray, range} from '../../utils/utils'
 import TurnIndicator from './turnIndicator'
@@ -25,7 +26,7 @@ const styleSheet = {
   },
 
   // --- style for tic-tac-toe board ---
-  boardRow: {
+  rowWrapper: {
     display: 'flex',
     flexDirection: 'row',
     flex: 1,
@@ -59,13 +60,26 @@ const styleSheet = {
 export const Player = {
   O: {id: 'O', value: 1},
   X: {id: 'X', value: -1},
+  '-': {id: '-', value: 0},
+}
+
+export const getPlayer = (value) => {
+  if (value === 1) return {id: 'O', value: 1}
+  if (value === -1) return {id: 'X', value: -1}
+  if (value === 0) return {id: '-', value: 0}
+  return null
 }
 
 const BoardSize = 3
 const EmptyGameBoard = [
-  new Array(BoardSize),
-  new Array(BoardSize),
-  new Array(BoardSize)
+  new Array(BoardSize).fill(null),
+  new Array(BoardSize).fill(null),
+  new Array(BoardSize).fill(null),
+]
+const test = [
+  [0, 0, 0],
+  [0, 0, 0],
+  [0, 0, 0],
 ]
 
 // --- helper method ---
@@ -92,13 +106,19 @@ const haveWin = (gameboard) => haveRowWin(gameboard)
   || haveColumnWin(gameboard)
   || haveDiagWin(gameboard)
 
+
+const initState = {
+  currentPlayer: Player.O,
+  gameWin: false,
+  gameBoard: EmptyGameBoard,
+  gamePlayStack: [],
+}
+
 class TicTacToe extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentPlayer: Player.O,
-      gameBoard: EmptyGameBoard,
-      gamePlayStack: [],
+      ...initState,
       // score: [0, 0, 0, 0, 0, 0, 0, 0]
       // rowScore: [0, 0, 0],
       // columnScore: [0, 0, 0],
@@ -116,13 +136,14 @@ class TicTacToe extends React.Component {
   handlePlayerTic = (row, column, player) => () => {
     // 1.) mark it on gameBoard
     // add to gameboard array // {x, y, player}
-    console.log('row=' + row + ', column=' + column + ', player=' + player)
     let gameBoard = this.state.gameBoard
-    gameBoard[row][column] = player.value
+
+    // use ramda to update to create immutable array
+    let path = lensPath([row, column])
+    gameBoard = set(path, player.value, gameBoard)
 
     // 2.) determin is win
     let gameHaveWin = haveWin(gameBoard)
-    console.log('gameHaveWin = ', gameHaveWin)
 
     // 3.)
     if (gameHaveWin) {
@@ -133,7 +154,10 @@ class TicTacToe extends React.Component {
       this.switchPlayer()
     }
 
-    this.setState({gameBoard})
+    this.setState({
+      gameBoard,
+      gameWin: gameHaveWin,
+    })
   }
 
   switchPlayer = () => {
@@ -145,26 +169,29 @@ class TicTacToe extends React.Component {
   }
 
   resetGame = () => {
-
+    this.setState(initState)
   }
 
   // --- render ---
-  renderBlock = (row) => range(0, 2).map(i => {
+  renderRow = (rowArray, rowIndex) => rowArray.map((value, i) => {
     const border = i==1 ? styleSheet.sideborder : {}
-    const player = this.state.currentPlayer
+    const player = getPlayer(value) // player that clicked the btn
+    const currentPlayer = this.state.currentPlayer
+
     return (
       <Btn key={i}
         playerClicked={player}
-        clickBtn={this.handlePlayerTic(row, i, player)}
+        clickBtn={this.handlePlayerTic(rowIndex, i, currentPlayer)}
       />
     )
   })
 
-  renderRow = () => range(0, 2).map(i => {
+
+  renderGameBoard = (gameBoard) => gameBoard.map((row, i) => {
     const border = i==1 ? styleSheet.upDownborder : {}
     return (
-      <div key={i} style={{...styleSheet.boardRow, ...border}}>
-        {this.renderBlock(i)}
+      <div key={i} style={{...styleSheet.rowWrapper, ...border}}>
+        {this.renderRow(row, i)}
       </div>
     )
   })
@@ -173,11 +200,13 @@ class TicTacToe extends React.Component {
 		return (
       <div style={styleSheet.rootWrapper}>
 
-        <TurnIndicator player={this.state.currentPlayer}/>
+        <TurnIndicator
+          player={this.state.currentPlayer}
+          gameWin={this.state.gameWin} />
 
         {/* render game board */}
         <div style={styleSheet.boardContainer}>
-          {this.renderRow()}
+          {this.renderGameBoard(this.state.gameBoard)}
         </div>
 
         <button

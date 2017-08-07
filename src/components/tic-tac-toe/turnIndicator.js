@@ -27,19 +27,24 @@ const styleSheet = {
 }
 
 // props: {
-//     player: 'O', // 'O' or 'X'
+//    player: 'O', // 'O' or 'X'
+//    gameWin: true
 // }
 class TurnIndicator extends React.Component {
 
+  displayMsg = (gameWin) => {
+    const player = this.props.player.id
+    if (gameWin) return `${player} win!!!`
+    return `${player}'s turn`
+
+  }
 	render = () => {
 		const player = this.props.player || Player.O
     const color = player === Player.O ? styleSheet.playerO : styleSheet.playerX
 
 		return (
 			<div style={{...styleSheet.container, ...color}}>
-				{/* <div style={color}> */}
-          {`${player.id} turn`}
-        {/* </div> */}
+				{this.displayMsg(this.props.gameWin)}
 			</div>
 		)
 	}
