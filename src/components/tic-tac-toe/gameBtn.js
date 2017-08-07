@@ -31,25 +31,19 @@ class Btn extends React.Component {
     }
   }
 
-  // setButton = () => {
-  //     const ownerId = this.state.ownerId
-  //     // console.log('click: status', status)
-  //     if (ownerId !== IdEmpty) return
-  //
-  //     this.props.clickBtn()
-  //     const player = this.props.playerClicked
-  //     const newOwnerId = player ? player.id : IdEmpty
-  //     this.setState({ownerId: newOwnerId})
-  // }
+  onClick = () => {
+    const playerId = this.props.playerClicked && this.props.playerClicked.id
+    if (playerId) return
+    this.props.clickBtn()
+  }
 
-  // player: 'O', 'X', 'Empty', 'Disabled'
+  // player: 'O', 'X', '-', null
 	render = () => {
-    // console.log('render... this.state.status=', this.state.status)
 		const playerId = this.props.playerClicked && this.props.playerClicked.id
     const color = playerId === 'O' ? styleSheet.playerO : styleSheet.playerX
 
 		return (
-			<button style={{...styleSheet.container, ...color}} onClick={this.props.clickBtn}>
+			<button style={{...styleSheet.container, ...color}} onClick={this.onClick}>
         {playerId}
       </button>
 		)
