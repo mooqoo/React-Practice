@@ -1,5 +1,5 @@
 import React from 'react'
-import {lensPath, set} from 'ramda'
+import R from 'ramda'
 
 import {nthArray, range} from '../../utils/utils'
 import TurnIndicator from './turnIndicator'
@@ -76,11 +76,6 @@ const EmptyGameBoard = [
   new Array(BoardSize).fill(null),
   new Array(BoardSize).fill(null),
 ]
-const test = [
-  [0, 0, 0],
-  [0, 0, 0],
-  [0, 0, 0],
-]
 
 // --- helper method ---
 const haveRowWin = (gameboard) => gameboard.reduce((rowWin, row, index) => {
@@ -126,10 +121,6 @@ class TicTacToe extends React.Component {
     }
   }
 
-  addActionToStack = () => {
-
-  }
-
   // --- update method ---
   // TODO... this will update state..
   // so maybe move 2.) and 3.) out of this fuction and make it react through state change
@@ -139,8 +130,8 @@ class TicTacToe extends React.Component {
     let gameBoard = this.state.gameBoard
 
     // use ramda to update to create immutable array
-    let path = lensPath([row, column])
-    gameBoard = set(path, player.value, gameBoard)
+    let path = R.lensPath([row, column])
+    gameBoard = R.set(path, player.value, gameBoard)
 
     // 2.) determin is win
     let gameHaveWin = haveWin(gameBoard)
@@ -148,12 +139,20 @@ class TicTacToe extends React.Component {
     // 3.)
     if (gameHaveWin) {
       // TODO handle win
+      // update gameboard
+      const updateEmpty = (data) => data == null ? 0 : data
+      const updateRow = (array) => R.map(updateEmpty, array)
+      gameBoard = R.map(updateRow, gameBoard)
       console.log('Winner is ', this.state.currentPlayer.id)
     } else {
       // 3.) switch player
       this.switchPlayer()
     }
 
+    // 4.) update stack
+    this.addActionToStack()
+
+    // 5.)
     this.setState({
       gameBoard,
       gameWin: gameHaveWin,
@@ -172,6 +171,31 @@ class TicTacToe extends React.Component {
     this.setState(initState)
   }
 
+  addActionToStack = () => {
+    let currentState = this.state
+
+    // const excludeStack = (value, key) => key !== 'gamePlayStack'
+    let currentStackState = R.pick(['currentPlayer', 'gameWin', 'gameBoard'], currentState)
+    let gamePlayStack = this.state.gamePlayStack
+    gamePlayStack = R.append(currentStackState, gamePlayStack)
+    this.setState({gamePlayStack})
+    // TODO R.addpend() // add to last
+    // TODO R.dropLast() // remove from last
+  }
+
+  undo = () => {
+    let gamePlayStack = this.state.gamePlayStack
+
+    let lastStack = R.last(gamePlayStack)
+    gamePlayStack = R.init(gamePlayStack)
+
+    console.log('undo: ', gamePlayStack, lastStack)
+    this.setState({
+      gamePlayStack,
+      ...lastStack
+    })
+  }
+
   // --- render ---
   renderRow = (rowArray, rowIndex) => rowArray.map((value, i) => {
     const border = i==1 ? styleSheet.sideborder : {}
@@ -185,7 +209,6 @@ class TicTacToe extends React.Component {
       />
     )
   })
-
 
   renderGameBoard = (gameBoard) => gameBoard.map((row, i) => {
     const border = i==1 ? styleSheet.upDownborder : {}
@@ -209,12 +232,19 @@ class TicTacToe extends React.Component {
           {this.renderGameBoard(this.state.gameBoard)}
         </div>
 
-        <button
-          style={styleSheet.replayBtn}
-          onClick={this.resetGame}>
-          Replay
-        </button>
+        <div style={{display: 'flex', orientatio: 'row'}}>
+          <button
+            style={styleSheet.replayBtn}
+            onClick={this.resetGame}>
+            RESET
+          </button>
 
+          <button
+            style={styleSheet.replayBtn}
+            onClick={this.undo}>
+            UNDO
+          </button>
+        </div>
       </div>
 		)
 	}
